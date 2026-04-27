@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Лента мероприятий</h1>
+<div class="row mt-4">
+    {% for event in events %}
+        {% else %}
+        <div class="alert alert-info">Событий пока нет. Создайте первое!</div>
+    {% endfor %}
+</div>
+{% endblock %}
