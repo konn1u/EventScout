@@ -1,11 +1,74 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Лента мероприятий</h1>
-<div class="row mt-4">
-    {% for event in events %}
+<div class="container mt-5">
+    <h1 class="text-center text-white mb-5 fw-bold">Лента мероприятий</h1>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for item in events %}
+        <div class="col">
+            <div class="card h-100 bg-dark text-white border-0 shadow-lg" style="border-radius: 20px; overflow: hidden; transition: transform 0.2s;">
+
+                <div style="height: 220px; position: relative;">
+                    <img src="{{ url_for('static', filename='img/' + item.preview_img) }}"
+                         onerror="this.src='https://placehold.co/600x400/212529/007bff?text=No+Image'"
+                         alt="{{ item.title }}"
+                         style="width: 100%; height: 100%; object-fit: cover;">
+
+                    {% if current_user.is_authenticated and item.owner == current_user %}
+                    <a href="/event_delete/{{ item.id }}"
+                       class="btn btn-danger btn-sm position-absolute"
+                       style="top: 15px; right: 15px; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; opacity: 0.8;"
+                       onclick="return confirm('Удалить мероприятие?')"
+                       title="Удалить">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                    {% endif %}
+                </div>
+
+                <div class="card-body d-flex flex-column p-4">
+                    <h4 class="card-title text-primary fw-bold mb-3">{{ item.title }}</h4>
+
+                    <p class="card-text text-white-50 small mb-4" style="line-height: 1.5;">
+                        {{ item.description[:100] }}{{ '...' if item.description|length > 100 }}
+                    </p>
+
+                    <div class="mt-auto">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-geo-alt-fill text-danger me-2"></i>
+                            <span class="small"><strong>Где:</strong> {{ item.address }}</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="bi bi-calendar-event-fill text-info me-2"></i>
+                            <span class="small"><strong>Когда:</strong> {{ item.event_date.strftime('%d.%m.%Y %H:%M') }}</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="badge bg-secondary bg-opacity-25 text-white px-3 py-2" style="border-radius: 10px;">
+                                <i class="bi bi-person-circle me-1"></i> {{ item.owner.name }}
+                            </span>
+                        </div>
+
+                        <a href="/event/{{ item.id }}" class="btn btn-primary w-100 fw-bold py-2" style="border-radius: 12px;">
+                            Подробнее
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
         {% else %}
-        <div class="alert alert-info">Событий пока нет. Создайте первое!</div>
-    {% endfor %}
+        <div class="col-12 text-center py-5">
+            <h3 class="text-white-50">Мероприятий пока нет...</h3>
+            <a href="/add_event" class="btn btn-outline-primary mt-3">Создать первое событие</a>
+        </div>
+        {% endfor %}
+    </div>
 </div>
+
+<style>
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.4) !important;
+    }
+</style>
 {% endblock %}
