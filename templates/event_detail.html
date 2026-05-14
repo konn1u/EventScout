@@ -12,15 +12,19 @@
     <div class="card bg-dark text-white shadow-lg border-0" style="border-radius: 20px; overflow: hidden;">
         <div style="height: 400px; width: 100%; overflow: hidden; position: relative;">
             <img src="{{ url_for('static', filename='img/' + event.preview_img) }}"
-            onerror="this.src='https://placehold.co/1200x800/212529/007bff?text=EventScout'"
-            style="width: 100%; height: 100%; object-fit: cover;">
+                 onerror="this.src='https://placehold.co/1200x800/212529/007bff?text=EventScout'"
+                 style="width: 100%; height: 100%; object-fit: cover;">
             <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 50%; background: linear-gradient(transparent, rgba(0,0,0,0.7));"></div>
         </div>
 
         <div class="card-body p-4 p-md-5">
             <div class="d-flex justify-content-between align-items-start mb-4">
                 <h1 class="display-5 text-primary fw-bold">{{ event.title }}</h1>
-                <span class="badge bg-primary fs-6 p-2">Организатор: {{ event.owner.name }}</span>
+                <a href="/profile/{{ event.owner.name }}" class="text-decoration-none">
+                    <span class="badge bg-primary fs-6 p-2" style="border-radius: 8px;">
+                        Организатор: {{ event.owner.name }}
+                    </span>
+                </a>
             </div>
 
             <div class="row g-4">
@@ -30,7 +34,7 @@
                 </div>
 
                 <div class="col-md-4">
-                    <div class="p-4 bg-secondary bg-opacity-10 rounded-4 border border-secondary border-opacity-25">
+                    <div class="p-4 bg-secondary bg-opacity-10 rounded-4 border border-secondary border-opacity-25 shadow-sm">
                         <div class="mb-3">
                             <h6 class="text-muted small mb-1">Где проходит:</h6>
                             <p class="mb-0 fs-5"><i class="bi bi-geo-alt-fill text-danger me-2"></i>{{ event.address }}</p>
@@ -42,11 +46,64 @@
                     </div>
 
                     <div class="d-grid gap-2 mt-4">
-                        <button class="btn btn-primary btn-lg shadow fw-bold">Я пойду!</button>
+                        {% if show_confirm %}
+                        <button id="confirm-event-btn" class="btn btn-lg btn-warning shadow fw-bold py-3 mb-2" style="border-radius: 12px;">
+                            ⭐ Подтвердить участие
+                        </button>
+                        <script>
+                            document.getElementById('confirm-event-btn').onclick = function() {
+                                if (!confirm('Подтвердить, что мероприятие действительно идет?')) return;
+                                fetch('/api/confirm_event/{{ event.id }}', { method: 'POST' })
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        alert('Успешно! Вы подтвердили событие.');
+                                        location.reload();
+                                    }
+                                });
+                            };
+                        </script>
+                        {% endif %}
+
+                        {% if is_past %}
+                        <button
+                            class="btn btn-lg shadow fw-bold py-3 {{ 'btn-success' if event.is_confirmed else 'btn-secondary' }}"
+                            style="border-radius: 12px; cursor: not-allowed;"
+                            disabled>
+                            {% if event.is_confirmed %}
+                                Событие идет
+                            {% else %}
+                                Событие началось
+                            {% endif %}
+                        </button>
+
+                        {% else %}
+                        <button
+                            id="main-join-btn"
+                            class="btn btn-lg shadow fw-bold py-3 {{ 'btn-success' if current_user.is_authenticated and current_user in event.participants else 'btn-primary' }}"
+                            data-event-id="{{ event.id }}"
+                            style="border-radius: 12px; transition: all 0.3s ease;"
+                            {% if not current_user.is_authenticated %}disabled title="Войдите, чтобы записаться"{% endif %}>
+                            {% if current_user.is_authenticated and current_user in event.participants %}
+                                Я пойду ✅
+                            {% else %}
+                                Я пойду!
+                            {% endif %}
+                        </button>
+                        {% endif %}
+
+                        <div class="text-center">
+                            <small class="text-white-50">
+                                Уже идут: <strong id="participant-count" class="text-white">{{ event.participants|length }}</strong> чел.
+                            </small>
+                        </div>
 
                         {% if current_user.is_authenticated and event.owner == current_user %}
-                        <a href="/event_delete/{{ event.id }}" class="btn btn-outline-danger mt-2"
-                           onclick="return confirm('Удалить это мероприятие?')">
+                        <hr class="border-secondary opacity-25 my-3">
+                        <a href="/event_delete/{{ event.id }}"
+                           class="btn btn-outline-danger py-2"
+                           style="border-radius: 10px;"
+                           onclick="return confirm('Вы уверены, что хотите удалить это мероприятие?')">
                             <i class="bi bi-trash"></i> Удалить
                         </a>
                         {% endif %}
@@ -56,4 +113,41 @@
         </div>
     </div>
 </div>
+
+<script>
+window.onload = function() {
+    const btn = document.getElementById('main-join-btn');
+    if (!btn) return;
+
+    btn.onclick = function() {
+        if (btn.disabled) return;
+        btn.disabled = true;
+
+        const eventId = btn.getAttribute('data-event-id');
+        const countSpan = document.getElementById('participant-count');
+
+        fetch('/toggle_participation/' + eventId, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'}
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'joined') {
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-success');
+                btn.textContent = 'Я пойду ✅';
+            } else if (data.status === 'left') {
+                btn.classList.remove('btn-success');
+                btn.classList.add('btn-primary');
+                btn.textContent = 'Я пойду!';
+            }
+            if (countSpan) countSpan.textContent = data.count;
+        })
+        .catch(err => alert("Ошибка связи с сервером"))
+        .finally(() => {
+            btn.disabled = false;
+        });
+    };
+};
+</script>
 {% endblock %}

@@ -22,12 +22,15 @@
                 <div class="navbar-nav ms-auto align-items-center">
                     {% if current_user.is_authenticated %}
                         <span class="navbar-text me-3 text-white">
-                            Привет, <strong>{{ current_user.name }}</strong>!
+                            Привет,
+                            <a href="/profile/{{ current_user.name }}" class="text-white text-decoration-none border-bottom border-primary border-2">
+                                <strong>{{ current_user.name }}</strong>
+                            </a>!
                         </span>
-                        <a class="btn btn-logout btn-sm" href="/logout">Выйти</a>
-                        <a class="nav-link" href="/add_event">Создать событие</a>
+                        <a class="nav-link" href="/rating">Рейтинг</a> <a class="nav-link" href="/add_event">Создать событие</a>
+                        <a class="btn btn-logout btn-sm ms-2" href="/logout">Выйти</a>
                     {% else %}
-                        <a class="nav-link" href="/login">Войти</a>
+                        <a class="nav-link" href="/rating">Рейтинг</a> <a class="nav-link" href="/login">Войти</a>
                         <a class="btn btn-primary btn-sm ms-lg-2" href="/register">Регистрация</a>
                     {% endif %}
                 </div>

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card bg-dark text-white p-4 shadow border-0" style="border-radius: 20px;">
+                <h2 class="fw-bold mb-4 text-center">Настройки профиля</h2>
+                
+                <form action="" method="post" enctype="multipart/form-data" novalidate>
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-3">
+                        {{ form.name.label(class="form-label text-secondary") }}
+                        {{ form.name(class="form-control bg-secondary bg-opacity-10 text-white border-secondary border-opacity-25") }}
+                        {% for error in form.name.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.about.label(class="form-label text-secondary") }}
+                        {{ form.about(class="form-control bg-secondary bg-opacity-10 text-white border-secondary border-opacity-25", rows="3") }}
+                        {% for error in form.about.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-4">
+                        {{ form.avatar.label(class="form-label text-secondary") }}
+                        {{ form.avatar(class="form-control bg-secondary bg-opacity-10 text-white border-secondary border-opacity-25") }}
+                        <div class="form-text text-secondary">Рекомендуется квадратное изображение.</div>
+                        {% for error in form.avatar.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        {{ form.submit(class="btn btn-primary btn-lg", style="border-radius: 10px;") }}
+                        <a href="{{ url_for('profile', username=current_user.name) }}" class="btn btn-link text-secondary text-decoration-none">Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

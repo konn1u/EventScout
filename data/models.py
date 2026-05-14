@@ -1,4 +1,3 @@
-import datetime
 import sqlalchemy
 from sqlalchemy import orm
 from flask_login import UserMixin
@@ -20,6 +19,9 @@ class User(SqlAlchemyBase, UserMixin):
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     owned_events = orm.relationship("Event", back_populates='owner', cascade="all, delete-orphan")
     booked_events = orm.relationship("Event", secondary=participation_table, back_populates="participants")
+    score = sqlalchemy.Column(sqlalchemy.Integer, default=0)
+    about = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    avatar = sqlalchemy.Column(sqlalchemy.String, nullable=True)
 
 
     def set_password(self, password):
@@ -41,3 +43,5 @@ class Event(SqlAlchemyBase):
     user_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id"))
     owner = orm.relationship('User', back_populates='owned_events')
     participants = orm.relationship("User", secondary=participation_table, back_populates="booked_events")
+    is_finished = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+    is_confirmed = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
