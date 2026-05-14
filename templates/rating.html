@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2 class="text-white mb-4 text-center fw-bold">
+                <i class="bi bi-trophy text-warning me-2"></i> Топ скаутов
+            </h2>
+
+            <div class="card bg-dark text-white shadow border-0" style="border-radius: 20px; overflow: hidden;">
+                <table class="table table-dark table-hover mb-0 align-middle">
+                    <thead class="bg-secondary bg-opacity-25">
+                        <tr>
+                            <th class="ps-4 py-3" style="width: 80px;">Место</th>
+                            <th class="py-3">Пользователь</th>
+                            <th class="text-center py-3">Счет</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td class="ps-4">
+                                {% if loop.index == 1 %}
+                                    <span class="badge bg-warning text-dark rounded-circle p-2">1</span>
+                                {% elif loop.index == 2 %}
+                                    <span class="badge bg-light text-dark rounded-circle p-2">2</span>
+                                {% elif loop.index == 3 %}
+                                    <span class="badge bg-danger rounded-circle p-2">3</span>
+                                {% else %}
+                                    <span class="text-secondary ms-2">{{ loop.index }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    {% if user.avatar %}
+                                        <img src="{{ url_for('static', filename='img/' + user.avatar) }}"
+                                             class="rounded-circle me-3"
+                                             style="width: 40px; height: 40px; object-fit: cover; flex-shrink: 0;">
+                                    {% else %}
+                                        <div class="bg-primary rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                            <i class="bi bi-person-fill"></i>
+                                        </div>
+                                    {% endif %}
+                                    <a href="/profile/{{ user.name }}" class="text-white text-decoration-none fw-bold">
+                                        {{ user.name }}
+                                    </a>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <span class="fw-bold text-info fs-5">{{ user.score }}</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

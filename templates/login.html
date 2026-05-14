@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <div class="card shadow-sm mt-5">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">Вход</h2>
+                <form action="" method="post">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.email.label(class="form-label") }}
+                        {{ form.email(class="form-control", type="email") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.password.label(class="form-label") }}
+                        <div class="input-group">
+                            {{ form.password(class="form-control", type="password", id="password-field") }}
+                            <button class="btn btn-outline-secondary" type="button" id="toggle-password">🐵</button>
+                        </div>
+                    </div>
+                    <div class="mb-3 form-check">
+                        {{ form.remember_me(class="form-check-input") }}
+                        {{ form.remember_me.label(class="form-check-label") }}
+                    </div>
+                    <div class="d-grid">
+                        {{ form.submit(type="submit", class="btn btn-primary") }}
+                    </div>
+                    {% if message %}
+                        <div class="alert alert-danger mt-3">{{ message }}</div>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const toggleBtn = document.querySelector('#toggle-password');
+    const pwdField = document.querySelector('#password-field');
+
+    toggleBtn.addEventListener('click', function () {
+        const isPwd = pwdField.getAttribute('type') === 'password';
+        pwdField.setAttribute('type', isPwd ? 'text' : 'password');
+        this.textContent = isPwd ? '🐵' : '🙈';
+    });
+</script>
+
+{% endblock %}

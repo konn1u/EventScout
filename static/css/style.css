@@ -1,0 +1,72 @@
+.form-control,
+input[type="text"],
+input[type="datetime-local"],
+textarea,
+input[type="file"] {
+    background-color: #121212 !important;
+    color: #ffffff !important;
+    border: 1px solid #333333 !important;
+}
+
+.form-control::placeholder {
+    color: #888888 !important;
+}
+
+.form-control:focus {
+    background-color: #000000 !important;
+    border-color: #0d6efd !important;
+    box-shadow: none !important;
+    color: #ffffff !important;
+}
+
+input[type="file"]::file-selector-button {
+    background-color: #0d6efd !important;
+    color: white !important;
+    border: none;
+    margin-right: 10px;
+}
+
+.form-text,
+small,
+.text-muted {
+    color: #ced4da !important;
+}
+
+.btn-logout {
+    color: #f8f9fa;
+    border-color: #f8f9fa;
+    background-color: transparent;
+    transition: all 0.3s ease;
+}
+
+.btn-logout:hover {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    color: white !important;
+}
+
+.card {
+    background-color: #121212 !important;
+    border: 1px solid #333333 !important;
+    color: white !important;
+}
+
+.card-title {
+    color: white !important;
+}
+
+#toggle-password {
+    background-color: #121212 !important;
+    border: 1px solid #333333 !important;
+    color: white !important;
+}
+
+.card .form-control {
+    background-color: #000000 !important;
+    color: white !important;
+    border: 1px solid #444 !important;
+}
+
+.form-check-label {
+    color: #ced4da !important;
+}

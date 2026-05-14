@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm mt-4 bg-dark text-white border-0" style="border-radius: 20px;">
+            <div class="card-body p-4">
+                <h2 class="card-title text-center mb-4 text-primary fw-bold">Новое событие</h2>
+
+                <form action="" method="post" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-3">
+                        {{ form.title.label(class="form-label") }}
+                        {{ form.title(class="form-control bg-secondary text-white border-0") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.description.label(class="form-label") }}
+                        {{ form.description(class="form-control bg-secondary text-white border-0", rows=3) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.address.label(class="form-label") }}
+                        {{ form.address(class="form-control bg-secondary text-white border-0") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.event_date.label(class="form-label") }}
+                        {{ form.event_date(class="form-control bg-secondary text-white border-0", type="datetime-local") }}
+                    </div>
+
+                    <div class="mb-4">
+                        {{ form.preview_img.label(class="form-label") }}
+                        {{ form.preview_img(class="form-control custom-file-input") }}
+                        <small class="text-muted">Рекомендуется формат 16:9 (JPG, PNG)</small>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        {{ form.submit(type="submit", class="btn btn-primary btn-lg fw-bold shadow") }}
+
+                        <a href="/" class="btn btn-cancel-custom fw-bold">Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .custom-file-input::-webkit-file-upload-button {
+        background-color: #0d6efd;
+        border: none;
+        border-radius: 6px;
+        color: white;
+        padding: 5px 15px;
+        margin-right: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .custom-file-input::-webkit-file-upload-button:hover {
+        background-color: #0b5ed7;
+    }
+
+    .btn-cancel-custom {
+        background: transparent;
+        color: #6c757d; /* Изначально серый текст */
+        border: 1px solid #6c757d;
+        border-radius: 8px;
+        padding: 10px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        text-align: center;
+    }
+
+    .btn-cancel-custom:hover {
+        background-color: #dc3545; /* Красный фон (Danger) */
+        border-color: #dc3545;
+        color: white; /* Белый текст */
+        box-shadow: 0 0 10px rgba(220, 53, 69, 0.4);
+    }
+
+    .form-control {
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-control:focus {
+        background-color: #495057 !important;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25) !important;
+    }
+</style>
+{% endblock %}
