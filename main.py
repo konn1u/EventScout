@@ -293,14 +293,11 @@ def rating():
             users=users
         )
 
+if not os.path.exists('db'):
+    os.makedirs('db')
+
+db_session.global_init("db/events.db")
+
 
 if __name__ == '__main__':
-    if not os.path.exists('db'):
-        os.mkdir('db')
-    db_session.global_init("db/events.db")
-
-    uploads_dir = os.path.join(static_dir, 'img')
-    if not os.path.exists(uploads_dir):
-        os.makedirs(uploads_dir)
-
     app.run(port=8080, host='127.0.0.1')
